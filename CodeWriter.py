@@ -131,14 +131,14 @@ class CodeWriter:
                 self.write_asm(f"@{arg2}")
                 self.write_asm("D=A")
                 self.write_asm("@THIS")
-                self.write_asm(f"A=A+D")
+                self.write_asm(f"A=M+D")
                 self.write_asm("D=M")
                 self.push_stack_to_d()
             elif arg1 == "that":
                 self.write_asm(f"@{arg2}")
                 self.write_asm("D=A")
                 self.write_asm("@THAT")
-                self.write_asm("A=A+D")
+                self.write_asm("A=M+D")
                 self.write_asm("D=M")
                 self.push_stack_to_d()
             elif arg1 == "static":
