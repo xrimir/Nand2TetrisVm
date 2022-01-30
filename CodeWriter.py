@@ -2,15 +2,6 @@ class CodeWriter:
     def __init__(self, filename):
         self.filename = filename
         self.asm_file = open(self.filename, "w")
-        self.address_dict = {
-            'local': 'LCL',
-            'argument': 'ARG',
-            'this': 'THIS',
-            'that': 'THAT',
-            'pointer': 3,
-            'temp': 5,
-            'static': 16,
-        }
 
     def write_asm(self, text):
         self.asm_file.write(text + '\n')
@@ -37,18 +28,14 @@ class CodeWriter:
         self.decrement_stack()
         self.write_asm("A=M")
         if arg1 == "add":
-            self.write_asm("//---------------------- ADD --------------------------")
             self.write_asm("M=M+D")
         elif arg1 == "sub":
-            self.write_asm("//---------------------- SUB --------------------------")
             self.write_asm("M=M-D")
         elif arg1 == "and":
-            self.write_asm("//---------------------- AND --------------------------")
             self.write_asm("M=M&D")
         elif arg1 == "or":
             self.write_asm("M=M|D")
         elif arg1 == "eq":
-            self.write_asm("//---------------------- EQ --------------------------")
             self.write_asm("M=M-D")
             self.write_asm("D=M")
             self.write_asm(f"@SetEqBOOL{counter}")
@@ -64,7 +51,6 @@ class CodeWriter:
             self.write_asm("A=M")
             self.write_asm("M=D")
         elif arg1 == "gt":
-            self.write_asm("//---------------------- GT --------------------------")
             self.write_asm("D=M-D")
             self.write_asm(f"@Greater_than{counter}")
             self.write_asm("D;JGT")
@@ -79,7 +65,6 @@ class CodeWriter:
             self.write_asm("A=M")
             self.write_asm("M=D")
         elif arg1 == "lt":
-            self.write_asm("//---------------------- LT --------------------------")
             self.write_asm("D=M-D")
             self.write_asm(f"@Lesser_than{counter}")
             self.write_asm("D;JLT")
@@ -96,7 +81,6 @@ class CodeWriter:
         self.increment_stack()
 
     def arith_not(self):
-        self.write_asm("//---------------------- NOT --------------------------")
         self.decrement_stack()
         self.write_asm("A=M")
         self.write_asm("D=!M")
@@ -104,7 +88,6 @@ class CodeWriter:
         self.increment_stack()
 
     def arith_neg(self):
-        self.write_asm("//---------------------- NEG --------------------------")
         self.decrement_stack()
         self.write_asm("A=M")
         self.write_asm("D=-M")
@@ -127,12 +110,10 @@ class CodeWriter:
     def write_push_pop(self, operation, arg1, arg2):
         if operation == "C_PUSH":
             if arg1 == "constant":
-                self.write_asm("--------------- PUSH CONST ---------------")
                 self.write_asm(f"@{arg2}")
                 self.write_asm("D=A")
                 self.push_stack_to_d()
             elif arg1 == "local":
-                self.write_asm("--------------- PUSH LOCAL ---------------")
                 self.write_asm(f"@{arg2}")
                 self.write_asm("D=A")
                 self.write_asm("@LCL")
@@ -140,7 +121,6 @@ class CodeWriter:
                 self.write_asm("D=M")
                 self.push_stack_to_d()
             elif arg1 == "argument":
-                self.write_asm("--------------- PUSH ARG ---------------")
                 self.write_asm(f"@{arg2}")
                 self.write_asm("D=A")
                 self.write_asm("@ARG")
@@ -148,7 +128,6 @@ class CodeWriter:
                 self.write_asm("D=M")
                 self.push_stack_to_d()
             elif arg1 == "this":
-                self.write_asm("--------------- PUSH THIS ---------------")
                 self.write_asm(f"@{arg2}")
                 self.write_asm("D=A")
                 self.write_asm("@THIS")
@@ -156,7 +135,6 @@ class CodeWriter:
                 self.write_asm("D=M")
                 self.push_stack_to_d()
             elif arg1 == "that":
-                self.write_asm("--------------- PUSH THAT ---------------")
                 self.write_asm(f"@{arg2}")
                 self.write_asm("D=A")
                 self.write_asm("@THAT")
@@ -168,12 +146,10 @@ class CodeWriter:
                 self.write_asm("D=M")
                 self.push_stack_to_d()
             elif arg1 == "temp":
-                self.write_asm("--------------- PUSH TEMP ---------------")
                 self.write_asm(f"@{(5 + int(arg2))}")
                 self.write_asm("D=M")
                 self.push_stack_to_d()
             elif arg1 == "pointer":
-                self.write_asm(f"--------------- PUSH POINTER {arg2}---------------")
                 arg2 = int(arg2)
                 if arg2 == 0:
                     self.write_asm("@THIS")
@@ -185,7 +161,6 @@ class CodeWriter:
                     self.push_stack_to_d()
         elif operation == "C_POP":
             if arg1 == "local":
-                self.write_asm("--------------- POP LOCAL ---------------")
                 self.write_asm(f"@{arg2}")
                 self.write_asm("D=A")
                 self.write_asm("@LCL")
@@ -197,7 +172,6 @@ class CodeWriter:
                 self.write_asm("A=M")
                 self.write_asm("M=D")
             elif arg1 == "argument":
-                self.write_asm("--------------- POP ARG ---------------")
                 self.write_asm(f"@{arg2}")
                 self.write_asm("D=A")
                 self.write_asm("@ARG")
@@ -209,7 +183,6 @@ class CodeWriter:
                 self.write_asm("A=M")
                 self.write_asm("M=D")
             elif arg1 == "this":
-                self.write_asm("--------------- POP THIS ---------------")
                 self.write_asm(f"@{arg2}")
                 self.write_asm("D=A")
                 self.write_asm("@THIS")
@@ -221,15 +194,14 @@ class CodeWriter:
                 self.write_asm("A=M")
                 self.write_asm("M=D")
             elif arg1 == "that":
-                self.write_asm("--------------- POP THAT---------------")
                 self.write_asm(f"@{arg2}")
                 self.write_asm("D=A")
                 self.write_asm("@THAT")
                 self.write_asm("D=D+M")
-                self.write_asm(f"@var")
+                self.write_asm(f"@varr")
                 self.write_asm(f"M=D")
                 self.pop_stack_to_d()
-                self.write_asm("@var")
+                self.write_asm("@varr")
                 self.write_asm("A=M")
                 self.write_asm("M=D")
             elif arg1 == "static":
@@ -237,12 +209,10 @@ class CodeWriter:
                 self.write_asm(f"@{self.filename}.{arg2}")
                 self.write_asm("M=D")
             elif arg1 == "temp":
-                self.write_asm("// ---- POP TEMP-------")
                 self.pop_stack_to_d()
                 self.write_asm(f"@{(5 + int(arg2))}")
                 self.write_asm("M=D")
             elif arg1 == "pointer":
-                self.write_asm(f"// POINTER POP {arg1} => {arg2} => {int(arg2) == 0}")
                 self.decrement_stack()
                 if int(arg2) == 0:
                     self.write_asm("A=M")
